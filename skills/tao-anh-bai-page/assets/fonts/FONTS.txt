@@ -1,0 +1,8 @@
+Font đi kèm skill tao-anh-bai-page (đều theo giấy phép SIL Open Font License 1.1, xem OFL.txt):
+- Be Vietnam Pro (woff2)      — phong cách mac-dinh
+- Noto Serif (woff, cắt gọn Latin + tiếng Việt)   — tap-chi
+- Montserrat (woff, cắt gọn)  — toi-gian, pastel, tuong-phan
+- Anton (woff, cắt gọn)       — tuong-phan (tiêu đề, con số)
+- Patrick Hand (woff, cắt gọn) — so-tay, bang-den
+- Playfair Display (woff2 biến thiên, 3 bộ chữ) — chữ có chân thanh lịch, dùng qua "font" trong thiet-ke.json (spa, mỹ phẩm, trang sức, trà, quà tặng)
+- Nunito (woff2 biến thiên, 3 bộ chữ) — chữ tròn mềm, thân thiện, dùng qua "font" trong thiet-ke.json (mẹ & bé, thú cưng, đồ ăn vặt, giáo dục trẻ em)

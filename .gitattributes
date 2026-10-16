@@ -1,0 +1,2 @@
+# Giữ nguyên từng byte (BOM UTF-8, xuống dòng) — PowerShell 5.1 cần BOM để đọc đúng tiếng Việt
+* -text

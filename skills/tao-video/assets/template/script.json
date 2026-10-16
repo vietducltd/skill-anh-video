@@ -1,0 +1,34 @@
+{
+  "_ghichu": "Khung kịch bản trống của template story. Thay mọi chỗ <...> bằng nội dung lấy từ tài liệu của người dùng, sửa số cảnh, số dòng cho hợp, rồi chạy scripts/check_script.py và scripts/pipeline.py. value của cảnh stat là con số có trong tài liệu. sub là phụ đề, dấu _ nối từ ghép; tts là các đoạn [ngôn ngữ, chữ] cho gtts và say; say là câu cho openai hoặc gemini.",
+  "meta": {
+    "brand": "<Tên thương hiệu>",
+    "letters": "",
+    "cta": { "kicker": "<Dòng nhỏ thẻ kết>", "headline": "<Câu chốt>\n[<từ nhấn>]", "rows": [["<Nhãn liên hệ>", "<Giá trị>"]] }
+  },
+  "bpm": 120,
+  "hold": 2.5,
+  "voiceStyle": "<Mô tả giọng đọc hợp thương hiệu>",
+  "scenes": [
+    { "type": "hook", "min": 4, "kicker": "<Chủ đề>", "headline": "<Câu hỏi mở đầu>\n[<từ nhấn>]?", "wm": "?" },
+    { "type": "list", "min": 5, "kicker": "<Số ý>", "headline": "<Tiêu đề danh sách>", "items": [["1", "<Ý 1>"], ["2", "<Ý 2>"], ["3", "<Ý 3>"]], "wm": "3" },
+    { "type": "point", "min": 5, "kicker": "<Ý 1>", "headline": "<Tiêu đề ý 1>", "sub": "<Dòng phụ ngắn>", "prop": "clipboard", "pose": "hold", "chips": ["<Chip 1>", "<Chip 2>"], "wm": "1" },
+    { "type": "stat", "min": 4.5, "kicker": "<Ý 2>", "headline": "<Tiêu đề con số>", "value": 0, "unit": "", "label": "<nhãn con số>", "countAt": { "line": 4, "word": "con số" }, "wm": "2" },
+    { "type": "quiz", "min": 5, "kicker": "<Ý 3>", "headline": "<Câu hỏi tình huống>?", "answer": { "text": "<Đáp án ngắn>", "at": { "line": 6, "word": "đáp án" } }, "wm": "3" },
+    { "type": "cta", "min": 4 }
+  ],
+  "lines": [
+    { "scene": 0, "sub": "<Câu mở đầu nêu vấn đề hoặc câu hỏi>" },
+    { "scene": 1, "sub": "<Câu giới thiệu ba ý chính>" },
+    { "scene": 2, "sub": "<Một, câu nói ý thứ nhất>" },
+    { "scene": 2, "sub": "<câu nói tiếp ý thứ nhất>" },
+    { "scene": 3, "sub": "<Hai, câu có con số trong tài liệu>" },
+    { "scene": 4, "sub": "<Ba, câu hỏi tình huống?>" },
+    { "scene": 4, "sub": "<Câu nêu đáp án>" },
+    { "scene": 5, "sub": "<Câu chốt và lời mời hành động>" }
+  ],
+  "cues": [
+    { "line": 1, "word": "ba", "sfx": "pop" },
+    { "line": 4, "word": "con số", "sfx": "ding" },
+    { "line": 6, "word": "đáp án", "sfx": "pop" }
+  ]
+}

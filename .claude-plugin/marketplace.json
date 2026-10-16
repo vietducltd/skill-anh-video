@@ -1,0 +1,12 @@
+{
+  "name": "litado-anh-video",
+  "owner": { "name": "LITADO" },
+  "description": "Bộ skill tiếng Việt: ảnh quảng cáo, ảnh minh hoạ bài viết và video Reels cho fanpage.",
+  "plugins": [
+    {
+      "name": "anh-video",
+      "source": "./",
+      "description": "3 skill: tao-anh-quang-cao, tao-anh-bai-page, tao-video."
+    }
+  ]
+}
