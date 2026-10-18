@@ -159,6 +159,23 @@ frame as clean dark negative space with no objects and no text, for a headline
 to be added later. No added text, captions, logos or buttons anywhere.
 ```
 
+## Nền trống cho làn D (ghép sản phẩm thật)
+
+Khi làn D cần một cảnh có chiều sâu mà ảnh kho không có, nhờ ChatGPT vẽ **cảnh
+trống**, không tải ảnh sản phẩm lên. Ghép khối 1 (khổ, làn M) với:
+
+```
+Empty product photography scene with no products and no text. A <mặt bàn:
+wooden / marble / linen> tabletop fills the lower third, seen from eye level,
+<phông phía sau> softly blurred behind it, <ánh sáng> light coming from the
+<left/right>, shallow depth of field. Leave the center of the tabletop
+completely empty for a product to be placed later. Colors: <màu theo phong cách>.
+Avoid: products, bottles, boxes, logos, text, people, hands, watermark.
+```
+
+Hướng sáng ghi đúng hướng sáng trong ảnh sản phẩm gốc (bóng sản phẩm đổ về phía
+nào thì đèn ở phía ngược lại).
+
 ## Khối 5 — Giữ chữ trên bao bì (luôn có)
 
 ```

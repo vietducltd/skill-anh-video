@@ -1,6 +1,6 @@
 ---
 name: tao-anh-quang-cao
-description: "TẠO ẢNH QUẢNG CÁO từ ẢNH SẢN PHẨM THẬT + bài viết quảng cáo (caption) của người dùng. Chọn phong cách thiết kế hợp ngành và phân khúc (màu, font, bối cảnh, bố cục), lấy chữ trên ảnh từ bài content (không bịa), chọn góc sáng tạo (hero sang trọng, bối cảnh sử dụng, công dụng, ưu đãi, vấn đề→giải pháp), viết prompt giữ nguyên bao bì, chữ tiếng Việt có dấu; nhiều khổ cho người dùng chọn theo chỗ đăng: dọc 4:5, vuông 1:1, 9:16 (Story/Reels), ngang 16:9, 1.91:1 (ảnh chia sẻ link). MẶC ĐỊNH MIỄN PHÍ: người dùng tải ảnh sản phẩm và dán prompt vào ChatGPT hoặc Gemini bản miễn phí, gửi ảnh lại để Claude soát chữ, sản phẩm, chính sách và đưa về đúng khổ; hoặc chèn chữ thẳng lên ảnh chụp thật. Chỉ tạo tự động qua API OpenAI (tốn phí, cần khoá) khi người dùng yêu cầu. Script PowerShell, không cần Python. Dùng khi gõ \"/tao-anh-quang-cao\", \"làm ảnh quảng cáo\", \"tạo ảnh ads\", \"thiết kế ảnh chạy quảng cáo\", \"poster sản phẩm\", \"banner quảng cáo từ ảnh sản phẩm\", \"có content rồi, làm ảnh đi\" — kể cả khi người dùng chỉ gửi ảnh sản phẩm và nói \"làm ảnh quảng cáo cho cái này\". KHÔNG dùng để viết caption, làm ảnh cho bài đăng nuôi fanpage (tao-anh-bai-page), hay làm video."
+description: "TẠO ẢNH QUẢNG CÁO từ ẢNH SẢN PHẨM THẬT + bài viết quảng cáo (caption) của người dùng. Chọn phong cách thiết kế hợp ngành và phân khúc (màu, font, bối cảnh, bố cục), lấy chữ trên ảnh từ bài content (không bịa), chọn góc sáng tạo (hero sang trọng, bối cảnh sử dụng, công dụng, ưu đãi, vấn đề→giải pháp), viết prompt giữ nguyên bao bì, chữ tiếng Việt có dấu; nhiều khổ cho người dùng chọn theo chỗ đăng: dọc 4:5, vuông 1:1, 9:16 (Story/Reels), ngang 16:9, 1.91:1 (ảnh chia sẻ link). MẶC ĐỊNH MIỄN PHÍ: người dùng tải ảnh sản phẩm và dán prompt vào ChatGPT hoặc Gemini bản miễn phí, gửi ảnh lại để Claude soát chữ, sản phẩm, chính sách và đưa về đúng khổ; chèn chữ thẳng lên ảnh chụp thật; hoặc tách sản phẩm khỏi ảnh chụp rồi ghép vào nền mới (phông studio, mặt bàn gỗ/đá, ảnh cảnh), bao bì giữ nguyên. Chỉ tạo tự động qua API OpenAI (tốn phí, cần khoá) khi người dùng yêu cầu. Script PowerShell, không cần Python (riêng cách ghép ảnh cần Python). Dùng khi gõ \"/tao-anh-quang-cao\", \"làm ảnh quảng cáo\", \"tạo ảnh ads\", \"thiết kế ảnh chạy quảng cáo\", \"poster sản phẩm\", \"banner quảng cáo từ ảnh sản phẩm\", \"có content rồi, làm ảnh đi\" — kể cả khi người dùng chỉ gửi ảnh sản phẩm và nói \"làm ảnh quảng cáo cho cái này\". KHÔNG dùng để viết caption, làm ảnh cho bài đăng nuôi fanpage (tao-anh-bai-page), hay làm video."
 ---
 
 # Tạo ảnh quảng cáo từ ảnh sản phẩm
@@ -9,7 +9,8 @@ description: "TẠO ẢNH QUẢNG CÁO từ ẢNH SẢN PHẨM THẬT + bài vi�
 dùng. Đầu ra là bộ ảnh quảng cáo đã soát, ghép được ngay với caption để chạy.
 
 Claude không tự vẽ được ảnh như chụp thật: muốn dựng bối cảnh mới thì phải nhờ
-một AI vẽ ảnh. Skill có bốn làn, **ưu tiên miễn phí**:
+một AI vẽ ảnh, hoặc ghép sản phẩm thật vào nền mới. Skill có năm làn, **ưu tiên
+miễn phí**:
 
 - **Làn M — thủ công trên ChatGPT (mặc định, miễn phí).** Claude chọn phong
   cách, viết prompt, chỉ rõ ảnh sản phẩm cần tải lên. Người dùng tự dán vào
@@ -25,6 +26,9 @@ một AI vẽ ảnh. Skill có bốn làn, **ưu tiên miễn phí**:
 - **Làn B — nền không chữ + chèn chữ (dự phòng).** AI chỉ dựng cảnh, chừa chỗ
   trống (nền tạo bằng làn M hoặc A), `chen-chu.ps1` chèn chữ. Dùng khi AI viết
   sai chữ 2 lần, ảnh có khuôn mặt người thật, hoặc cần nhiều biến thể chữ.
+- **Làn D — ghép sản phẩm thật vào nền mới (miễn phí).** `ghep-anh.py` tách sản
+  phẩm khỏi ảnh chụp, đặt lên phông studio, mặt bàn gỗ/đá hoặc ảnh cảnh, thêm
+  bóng đổ. Bao bì đúng 100% vì không qua AI vẽ lại; cần cài Python một lần.
 
 AI vẽ ảnh thỉnh thoảng viết sai chữ, đổi chữ trên bao bì, nên **mọi ảnh AI
 đều phải soát** (Bước 4), dù tạo thủ công hay tự động.
@@ -33,7 +37,8 @@ Thư mục `scripts/` của skill này chứa 3 script PowerShell có sẵn trê
 Windows: `tao-anh.ps1`, `chen-chu.ps1`, `soi-chu.ps1`. Gọi bằng đường dẫn đầy
 đủ: `powershell -ExecutionPolicy Bypass -File "<thư mục skill>/scripts/<tên>.ps1" ...`.
 Trên macOS cần cài PowerShell 7 và dùng `pwsh`. Riêng `chen-chu.ps1` và
-`soi-chu.ps1` dùng System.Drawing nên chỉ chạy trên Windows.
+`soi-chu.ps1` dùng System.Drawing nên chỉ chạy trên Windows. Làn D dùng thêm
+script Python `ghep-anh.py` (Bước 5c).
 
 ## Bước 0 — Hỏi cách tạo ảnh, thu thập đầu vào
 
@@ -50,12 +55,16 @@ hỏi cách tạo ảnh viết rõ như sau (chỉnh xưng hô theo người dù
 > 2. **Tự động qua API OpenAI:** mình tạo ảnh trực tiếp, bạn không phải làm
 >    gì, nhưng mỗi ảnh tốn tiền và cần tài khoản OpenAI có nạp tiền.
 > 3. **Chèn chữ lên ảnh bạn đã chụp:** miễn phí, xong ngay, giữ nguyên ảnh gốc.
+> 4. **Ghép sản phẩm thật vào nền mới:** mình tách sản phẩm khỏi ảnh chụp, đặt
+>    lên phông trơn, mặt bàn gỗ, đá... (ảnh nền bạn tải miễn phí hoặc tự chụp).
+>    Miễn phí, bao bì giữ nguyên, cần cài Python một lần.
 >
 > Bạn chưa chọn thì mình làm theo cách 1.
 
 Người dùng không trả lời phần này, hoặc nói "không dùng API", "làm thủ công",
 "miễn phí" → **làn M**, không nhắc gì tới khoá API nữa. Chỉ chuyển sang làn A
-khi người dùng chọn cách 2 hoặc nói rõ "tạo tự động".
+khi người dùng chọn cách 2 hoặc nói rõ "tạo tự động". Chọn cách 4 → **làn D**
+(Bước 5c).
 
 1. **Khoá API OpenAI — chỉ khi chọn làn A.** Chạy `tao-anh.ps1 -KiemTra`. Chưa
    có khoá thì hướng dẫn người dùng:
@@ -135,8 +144,8 @@ thì mới làm các khổ còn lại đã chọn cho góc đó.
 **Chọn bao bì đưa vào ảnh:** AI giữ đúng chữ lớn trên bao bì, nhưng bao bì có
 **nhiều đoạn chữ nhỏ** (nhãn mô tả, thành phần, công dụng) thì AI hay viết lại
 sai và còn bịa thêm câu, kể cả câu về công dụng sức khoẻ. Sản phẩm có nhiều
-kiểu bao bì thì ưu tiên kiểu ít chữ; chỉ có bao bì nhiều chữ thì dùng làn B
-hoặc làn C.
+kiểu bao bì thì ưu tiên kiểu ít chữ; chỉ có bao bì nhiều chữ thì dùng làn D,
+làn B hoặc làn C.
 
 ## Bước 2 — Chốt bảng chữ trên ảnh
 
@@ -303,6 +312,101 @@ powershell -ExecutionPolicy Bypass -File "<skill>/scripts/chen-chu.ps1" -Anh "<l
 - Đặt tên ảnh `C<n>-<kho>.png`. Soát như Bước 4, tập trung vào: chữ có đè lên
   sản phẩm không, phụ đề có đọc rõ trên nền không (nền rối, nhiều chi tiết thì
   đổi `mau_nhan` sáng hơn).
+
+## Bước 5c — Làn D: ghép sản phẩm thật vào nền mới (miễn phí)
+
+Script tách sản phẩm khỏi ảnh chụp (nhận dạng tự động, chạy trên máy) rồi đặt
+vào nền mới, thêm bóng đổ, chỉnh nhẹ độ sáng và tông màu cho khớp nền. Sản phẩm
+giữ nguyên từng điểm ảnh: **bao bì, chữ in trên hộp đúng 100%**. Hợp khi ảnh
+sản phẩm chụp rõ nhưng bối cảnh xấu, hoặc bao bì nhiều chữ nhỏ mà AI hay vẽ sai.
+
+**Cài một lần** (cần Python 3.9+; chưa có thì hướng dẫn cài theo README của bộ
+skill, không tự tải phần mềm khi chưa hỏi):
+
+```
+pip install "rembg[cpu]" pillow numpy
+```
+
+Lần tách đầu tiên script tự tải bộ nhận dạng khoảng 180 MB (cần mạng), các lần
+sau chạy không cần mạng. Pip báo xung đột phiên bản với gói khác đã có trên máy
+thì báo người dùng, không tự gỡ hay hạ cấp gói khác khi chưa hỏi.
+
+**1. Tách sản phẩm** (mỗi ảnh khoảng 5 giây):
+
+```
+python "<skill>/scripts/ghep-anh.py" tach "<lv>/anh-goc/sp.jpg" --ra "<lv>/tach/sp.png"
+```
+
+Mở ảnh tách ra xem: viền có lẹm vào sản phẩm, còn dính nền, dính tay người cầm
+không.
+- Ảnh có nhiều thứ (sản phẩm và đồ trang trí, đĩa, khay) mà chỉ cần sản phẩm →
+  thêm `--vung "x,y,rong,cao"` (theo %) khoanh đúng sản phẩm.
+- Viền bị lẹm → chạy lại với `--mo-hinh birefnet-general-lite` (chậm hơn).
+- Tách kém với: chai, hũ thuỷ tinh trong suốt nhìn xuyên được, lông, tóc, đồ
+  kim loại bóng phản chiếu cảnh xung quanh, ảnh chụp trên nền quá rối. Báo người
+  dùng trước và đề nghị làn M.
+- Ảnh tốt nhất để tách: chụp ngang tầm mắt, nền trơn, đủ sáng, sản phẩm không bị
+  che.
+
+**2. Chọn nền** — đề xuất 2 phương án hợp phong cách ở Bước 1:
+
+| Nền | Cách làm | Hợp với |
+|---|---|---|
+| Phông studio | `--nen "studio:#<màu 1>,#<màu 2>"`, thêm `,buc` để có bục tròn dưới sản phẩm. Script tự dựng phông chuyển màu, sàn, vầng sáng sau sản phẩm | Hàng cao cấp, mỹ phẩm, đồ công nghệ; màu lấy từ bảng màu đã chọn |
+| Mặt bàn + phông | `--san "<ảnh mặt phẳng>"` trải ảnh chụp từ trên xuống (gỗ, đá, vải, giấy) thành mặt bàn nhìn nghiêng; `--nen` là phông studio hoặc ảnh không gian làm mờ (`--mo-nen 8`) | Đồ ăn uống, đồ gia dụng, thủ công, quà tặng |
+| Ảnh cảnh có sẵn | `--nen "<ảnh>"` chụp ngang tầm mắt, phần dưới có mặt bàn hoặc sàn trống; `--nen-tam "x,y"` chọn phần giữ lại | Ảnh người dùng tự chụp ở cửa hàng, quầy, góc làm việc |
+
+Ảnh mặt phẳng, ảnh cảnh lấy từ 3 nguồn hợp lệ:
+- **Ảnh người dùng tự chụp** — tự nhiên nhất.
+- **Kho ảnh miễn phí dùng cho quảng cáo được:** Pexels, Unsplash, Pixabay. Gửi
+  người dùng link tìm sẵn từ khoá tiếng Anh, VD
+  `https://www.pexels.com/search/<từ khoá>/`,
+  `https://unsplash.com/s/photos/<từ-khoá>`,
+  `https://pixabay.com/images/search/<từ khoá>/`. Từ khoá mặt phẳng: `wood
+  texture`, `marble texture`, `linen texture`, `concrete texture`, `paper
+  texture`; phông: `<loại không gian> interior blurred`, `bokeh background`.
+  Người dùng bấm tải miễn phí rồi kéo ảnh vào chat; lưu vào `<lv>/nen/`. Bỏ ảnh
+  có nhãn **Unsplash+** (ảnh trả phí).
+- **ChatGPT vẽ cảnh trống không có sản phẩm** (khối "Nền trống cho làn D" trong
+  `references/khung-prompt.md`), tải về như Bước 3M.
+
+Không lấy ảnh tìm trên Google, ảnh của shop khác. Không dùng ảnh nền có logo,
+thương hiệu khác, người nổi bật trong khung.
+
+**3. Ghép** — mỗi khổ một lệnh, cùng tên khổ với Bước 1:
+
+```
+python "<skill>/scripts/ghep-anh.py" ghep --sp "<lv>/tach/sp.png" --nen "studio:#<màu 1>,#<màu 2>" --kho 4x5 --ra "<lv>/nen-D1-4x5.png"
+python "<skill>/scripts/ghep-anh.py" ghep --sp "<lv>/tach/sp.png" --san "<lv>/nen/mat-ban.jpg" --nen "<lv>/nen/phong.jpg" --mo-nen 8 --kho 4x5 --ra "<lv>/nen-D2-4x5.png"
+```
+
+- Vị trí mặc định đã chừa chỗ cho chữ của `chen-chu.ps1`: khổ dọc, vuông thì sản
+  phẩm ở giữa, dưới dải tiêu đề, trên hàng giá/nút; khổ ngang thì sản phẩm bên
+  phải. Chỉnh bằng `--cao` (chiều cao sản phẩm), `--day` (đường đáy), `--x` (tâm
+  ngang), đều tính theo phần của khung (0..1).
+- Nhiều sản phẩm (tối đa 3): `--sp "a.png;b.png"`, chiều cao tương đối
+  `--ti-le "1,0.7"`.
+- Ảnh mặt phẳng có lẫn đồ vật → `--san-vung "x,y,rong,cao"` chỉ lấy khoảng sạch.
+- `--phan-chieu 0.15` thêm bóng phản chiếu, hợp phông studio có bục.
+- Script in khung sản phẩm theo % (VD `ngang 28%-72%, dọc 37%-77%`) để đối chiếu
+  với vùng chữ.
+
+**4. Chèn chữ** bằng `chen-chu.ps1` như Bước 5, cùng `-Kho`:
+
+```
+powershell -ExecutionPolicy Bypass -File "<skill>/scripts/chen-chu.ps1" -Anh "<lv>/nen-D1-4x5.png" -NoiDung "<lv>/chu-tren-anh.json" -Kho 4x5 -Ra "<lv>/D1-4x5.png"
+```
+
+Nền sáng thì đổi màu chữ như ghi chú nền sáng ở Bước 5b.
+
+**5. Soát** như Bước 4, thêm 4 điểm riêng của ảnh ghép:
+- Viền sạch: không còn vệt nền cũ, không mất góc sản phẩm.
+- Sản phẩm không lơ lửng: có bóng tiếp đất, đáy nằm trên mặt bàn hoặc bục.
+- Góc nhìn và hướng sáng khớp nền: sản phẩm chụp ngang tầm mắt thì không đặt lên
+  ảnh chụp từ trên xuống (dùng `--san` thay vì `--nen`).
+- Chữ không đè lên sản phẩm.
+
+Đặt tên ảnh `D<n>-<kho>.png`.
 
 ## Bước 6 — Giao kết quả
 

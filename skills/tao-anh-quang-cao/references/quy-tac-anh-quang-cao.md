@@ -61,6 +61,8 @@ Chạy `soi-chu.ps1` để phóng to vùng chữ, rồi mở từng ảnh ra xem
 | 7 | Không vi phạm chính sách ở trên | Sửa bảng chữ, tạo lại |
 | 8 | Màu, kiểu chữ, bối cảnh, bố cục **đúng phong cách đã chọn và hợp ngành, phân khúc** (VD trà cao cấp không ra kiểu flash sale chữ vàng đỏ; đồ chơi trẻ em không ra tông đen nặng) | Sửa khối 3, 4a theo `thiet-ke-theo-nganh.md`, tạo lại |
 
+| 9 | Làn D (ảnh ghép): viền sạch, có bóng tiếp đất, góc nhìn và hướng sáng khớp nền | Tách lại với `--vung` hoặc `--mo-hinh birefnet-general-lite`; đổi nền cùng góc nhìn; chỉnh `--day`, `--bong` |
+
 Mỗi ảnh ghi kết quả vào `duyet-anh.md`: **Đạt**, **Tạo lại** (kèm lý do), hoặc
 **Chuyển làn B**.
 
