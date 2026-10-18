@@ -309,6 +309,9 @@ powershell -ExecutionPolicy Bypass -File "<skill>/scripts/chen-chu.ps1" -Anh "<l
 - `-Kho 16x9`, `-Kho 1.91x1` (ngang): script đặt ảnh sát phải, nới bên trái
   bằng nền mờ của chính ảnh; tiêu đề, phụ đề, giá, nút nằm ở nửa trái. Đẹp nhất
   với ảnh sản phẩm nằm giữa, nền đơn giản.
+- Ảnh sáng, nhiều hoa văn (nội thất mạ vàng, đèn, gương...) mà chữ chìm vào nền:
+  thêm `"do_dam_nen": 220` vào JSON. Dải tối phía sau chữ sẽ đậm đặc tới hết phụ đề
+  rồi mới mờ dần (0–255, càng lớn càng đậm).
 - Đặt tên ảnh `C<n>-<kho>.png`. Soát như Bước 4, tập trung vào: chữ có đè lên
   sản phẩm không, phụ đề có đọc rõ trên nền không (nền rối, nhiều chi tiết thì
   đổi `mau_nhan` sáng hơn).

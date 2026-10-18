@@ -39,6 +39,7 @@ chu-tren-anh.json (UTF-8), ô nào để trống thì không vẽ:
     "font_tieu_de": "Cambria", font tiêu đề, giá, nút: tên font đã cài trên máy, hoặc file .ttf/.otf
                                (đường dẫn tính từ thư mục file JSON). Bỏ trống = mặc định
     "font_phu": "Segoe UI Semibold"   font phụ đề, chữ nhỏ trong huy hiệu giá
+    "do_dam_nen": 220          tuỳ chọn: dải tối đậm đặc tới hết phụ đề (0-255), cho ảnh nền sáng, rối
   }
 
 Chữ, giá và nút nằm trong vùng an toàn: lề trái/phải 10%; khổ 1x1, 4x5 từ 10% đến 88% chiều cao;
@@ -244,12 +245,50 @@ $giua = New-Object System.Drawing.StringFormat
 $giua.Alignment = [System.Drawing.StringAlignment]::Center
 $giua.LineAlignment = [System.Drawing.StringAlignment]::Center
 
-# Dải tối mờ sau chữ: khổ dọc ở phía trên, khổ ngang ở bên trái
+# Đo trước tiêu đề, phụ đề (biết chữ xuống tới đâu để dải tối phủ đủ), vẽ sau dải tối
+# Ảnh dọc 9x16: 14% trên bị ảnh đại diện, tên page che → tiêu đề bắt đầu từ 15%
+$y = if ($doc916) { [single]($H * 0.15) } elseif ($ngang) { [single]($H * 0.12) } else { [single]($H * 0.10) }
+$yTd = $y; $fTd = $null; $fPd = $null
+if ($tieuDe) {
+    # Khổ ngang: tiêu đề cao tối đa 45% ảnh, chừa chỗ cho phụ đề và hàng giá/nút
+    $co = if ($ngang) { [single]($H * 0.105) } else { [single]($W * 0.085) }
+    do {
+        $fTd = New-Object System.Drawing.Font($fontDam, $co, $kieuDam, [System.Drawing.GraphicsUnit]::Pixel)
+        $ktTd = $g.MeasureString($tieuDe, $fTd, 100000, $canh)
+        if ($ktTd.Width -le $rongChu -and (-not $ngang -or $ktTd.Height -le $H * 0.45)) { break }
+        $fTd.Dispose(); $co -= 2
+    } while ($co -gt 14)
+    $y += $ktTd.Height + $H * 0.005
+    $coPhu = $co * 0.62
+} else { $coPhu = if ($ngang) { [single]($H * 0.06) } else { [single]($W * 0.05) } }
+$yPd = $y
+if ($phuDe) {
+    $fPd = New-Object System.Drawing.Font($fontVua, [single]$coPhu, $kieuVua, [System.Drawing.GraphicsUnit]::Pixel)
+    $ktPd = $g.MeasureString($phuDe, $fPd, [int]$rongChu, $canh)   # dài quá bề rộng vùng chữ thì xuống dòng
+    $y += $ktPd.Height
+}
+
+# Dải tối mờ sau chữ: khổ dọc ở phía trên, khổ ngang ở bên trái.
+# "do_dam_nen" (0-255) trong JSON: dải đậm đặc phủ kín tới hết phụ đề rồi mới mờ dần — dùng cho ảnh nền
+# sáng, nhiều hoa văn mà dải mờ mặc định không đủ làm nổi chữ (VD 220)
+$doDam = Gia-Tri "do_dam_nen" ""
 if ($tieuDe -or $phuDe) {
     if ($ngang) {
         $rongDai = [int]($W * 0.62)
-        $grad = New-Object System.Drawing.Drawing2D.LinearGradientBrush((New-Object System.Drawing.Rectangle(-1, 0, ($rongDai + 2), $H)), (Mau $hexToi 190), (Mau $hexToi 0), 0)
-        $g.FillRectangle($grad, 0, 0, $rongDai, $H); $grad.Dispose()
+        if ($doDam) {
+            $kin = [int]($le + $rongChu + $W * 0.03); $rongDai = [int]($kin + $W * 0.14)
+            $g.FillRectangle((New-Object System.Drawing.SolidBrush((Mau $hexToi ([int]$doDam)))), 0, 0, $kin, $H)
+            $grad = New-Object System.Drawing.Drawing2D.LinearGradientBrush((New-Object System.Drawing.Rectangle(($kin - 1), 0, ($rongDai - $kin + 2), $H)), (Mau $hexToi ([int]$doDam)), (Mau $hexToi 0), 0)
+            $g.FillRectangle($grad, $kin, 0, ($rongDai - $kin), $H); $grad.Dispose()
+        } else {
+            $grad = New-Object System.Drawing.Drawing2D.LinearGradientBrush((New-Object System.Drawing.Rectangle(-1, 0, ($rongDai + 2), $H)), (Mau $hexToi 190), (Mau $hexToi 0), 0)
+            $g.FillRectangle($grad, 0, 0, $rongDai, $H); $grad.Dispose()
+        }
+    } elseif ($doDam) {
+        $kin = [int]($y + $H * 0.025); $caoDai = [int]($kin + $H * 0.14)
+        $g.FillRectangle((New-Object System.Drawing.SolidBrush((Mau $hexToi ([int]$doDam)))), 0, 0, $W, $kin)
+        $grad = New-Object System.Drawing.Drawing2D.LinearGradientBrush((New-Object System.Drawing.Rectangle(0, ($kin - 1), $W, ($caoDai - $kin + 2))), (Mau $hexToi ([int]$doDam)), (Mau $hexToi 0), 90)
+        $g.FillRectangle($grad, 0, $kin, $W, ($caoDai - $kin)); $grad.Dispose()
     } else {
         $caoDai = if ($doc916) { [int]($H * 0.45) } else { [int]($H * 0.40) }
         # vùng brush cao hơn vùng tô 2px: tránh GDI+ lặp màu đầu ở mép dưới (thành đường kẻ)
@@ -258,29 +297,12 @@ if ($tieuDe -or $phuDe) {
     }
 }
 
-# Ảnh dọc 9x16: 14% trên bị ảnh đại diện, tên page che → tiêu đề bắt đầu từ 15%
-$y = if ($doc916) { [single]($H * 0.15) } elseif ($ngang) { [single]($H * 0.12) } else { [single]($H * 0.10) }
 if ($tieuDe) {
-    # Khổ ngang: tiêu đề cao tối đa 45% ảnh, chừa chỗ cho phụ đề và hàng giá/nút
-    $co = if ($ngang) { [single]($H * 0.105) } else { [single]($W * 0.085) }
-    do {
-        $fTd = New-Object System.Drawing.Font($fontDam, $co, $kieuDam, [System.Drawing.GraphicsUnit]::Pixel)
-        $kt = $g.MeasureString($tieuDe, $fTd, 100000, $canh)
-        if ($kt.Width -le $rongChu -and (-not $ngang -or $kt.Height -le $H * 0.45)) { break }
-        $fTd.Dispose(); $co -= 2
-    } while ($co -gt 14)
-    $vung = New-Object System.Drawing.RectangleF($le, $y, $rongChu, $kt.Height)
-    $g.DrawString($tieuDe, $fTd, (New-Object System.Drawing.SolidBrush($mChu)), $vung, $canh)
-    $y += $kt.Height + $H * 0.005
-    $coPhu = $co * 0.62
+    $g.DrawString($tieuDe, $fTd, (New-Object System.Drawing.SolidBrush($mChu)), (New-Object System.Drawing.RectangleF($le, $yTd, $rongChu, $ktTd.Height)), $canh)
     $fTd.Dispose()
-} else { $coPhu = if ($ngang) { [single]($H * 0.06) } else { [single]($W * 0.05) } }
-
+}
 if ($phuDe) {
-    $fPd = New-Object System.Drawing.Font($fontVua, [single]$coPhu, $kieuVua, [System.Drawing.GraphicsUnit]::Pixel)
-    $kt = $g.MeasureString($phuDe, $fPd, [int]$rongChu, $canh)   # dài quá bề rộng vùng chữ thì xuống dòng
-    $g.DrawString($phuDe, $fPd, (New-Object System.Drawing.SolidBrush($mNhan)), (New-Object System.Drawing.RectangleF($le, $y, $rongChu, ($kt.Height + 2))), $canh)
-    $y += $kt.Height
+    $g.DrawString($phuDe, $fPd, (New-Object System.Drawing.SolidBrush($mNhan)), (New-Object System.Drawing.RectangleF($le, $yPd, $rongChu, ($ktPd.Height + 2))), $canh)
     $fPd.Dispose()
 }
 
